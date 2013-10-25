@@ -1,0 +1,140 @@
+
+<%inherit file="base.html" />
+
+<script language="javascript">
+    var next_url = "${next_url |n}" || "/";
+</script>
+
+<div class="container-fluid" id="login_content">	<!--Mainbody start-->
+    <div class="row-fluid">
+        <form class="form form-horizontal" style="margin-top: 50px;">
+            <div class="span6">
+                <h3 style="text-align: center; margin-bottom: 20px;">Already a member?</h3>
+                <div class="control-group">
+                    <label class="control-label">Email Address</label>
+                    <div class="controls">
+			<input type="text" value="" id="email" name="email_login" class="input-xlarge">
+                    </div>
+                </div>
+                    
+		<div class="control-group">
+		    <label class="control-label">Password</label>
+		    <div class="controls">
+			<input type="password" id="password" name="password_login" class="input-xlarge">
+		    </div>
+		</div>
+		<div class="control-group">
+		    <label class="control-label">&nbsp;</label>
+		    <div class="controls">
+			&nbsp;
+		    </div>
+		</div>
+		<div class="control-group">
+		    <label class="control-label">&nbsp;</label>
+		    <div class="controls">
+			<button class="btn btn-large" id="native_login" type="button">Log in</button>
+		    </div>
+		</div>
+            </div>
+            <div style="border-left: 1px solid #aaa; padding-top: 10px; height: 250px;" class="span1">&nbsp;</div>
+        </form>
+        <form id="person_data_form" class="form form-horizontal" style="margin-top: 50px;">
+            <div class="span5">
+                <h3 style="text-align: center; margin-bottom: 20px;">New to the site?</h3>
+                <div class="control-group">
+                    <label class="control-label">Email Address</label>
+                    <div class="controls">
+			<input type="text" value="" id="username" name="username" class="input-xlarge">
+                    </div>
+                </div>
+                    
+		<div class="control-group">
+		    <label class="control-label">Password</label>
+		    <div class="controls">
+			<input type="password" id="new_password" name="new_password" class="input-xlarge">
+		    </div>
+		</div>
+		<div class="control-group">
+		    <label class="control-label">Confirm Password</label>
+		    <div class="controls">
+			<input type="password" id="confirm_password" name="confirm_password" class="input-xlarge">
+		    </div>
+		</div>
+		<div class="control-group">
+		    <label class="control-label">&nbsp;</label>
+		    <div class="controls">
+			<button class="btn btn-large" id="register" type="button">Sign up</button>
+		    </div>
+		</div>
+            </div>
+        </form>
+    </div>
+    <div class="" style="text-align: center; margin-top: 100px;">
+        <h3>Or</h3>
+        <div id="ssmi_social_login_div" style="margin: 0 auto;"></div>
+        <script language="javascript" type="text/javascript">
+            var ssmi_social_login_success = function(user_info){
+                if (cc_user){
+                    //do nothing if user is already logged in
+                } else if (user_info && user_info.network_type){
+                    person_data = {
+                      username: user_info.email,
+                      login_type: user_info.network_type || 'facebook',
+                      ss_uid: user_info.ss_user_id,
+                      first_name: user_info.first_name,
+                      last_name: user_info.last_name
+
+                    };
+                    if (person_data.login_type === 'facebook'){
+                        person_data.fb_uid = user_info.facebook.fb_user_id;
+                        person_data.dob = user_info.facebook.date_of_birth;
+                        person_data.gender = user_info.facebook.gender;
+                    }
+                    authenticate_user(person_data);
+                }
+            };
+            var ssmi_social_login_failure = function(){};
+        </script>
+    </div>
+</div>
+
+
+<!-- popup to prompt a/c merging  -->
+    <div class="modal fade" id="merging_popup">
+	    <div class="modal-header">
+		<a class="close" data-dismiss="modal">&times;</a>
+		<h4>Merge Accounts </h4>
+	    </div>
+	    <div class="modal-body">
+
+	    </div>
+	    <div class="modal-footer">
+		<a href="javascript:void(0)" class="btn" data-dismiss="modal">Cancel</a>
+		<a id="merge_logins" href="javascript:void(0)" class="btn btn-primary">Merge</a>
+	    </div>
+    </div>
+<%text>
+    <script type="text/x-jquery-tmpl" id="merge_template">
+        <div class="alert alert-info" style="margin-bottom: 20px;">
+			We already have an account for ${username}.<br />
+			Sign in to merge your <span style="text-transform: capitalize;">${login_type}</span> and Email accounts.<br />
+            Later you will be able to use both.
+        </div>
+        <form class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label">Email Address</label>
+                <div class="controls">
+                    <input type="text" id="merging_email" name="merging_email" class="input-xlarge disabled" disabled value="${username}">
+                </div>
+                </div>
+            <div class="control-group">
+                <label class="control-label">Password</label>
+                <div class="controls">
+                    <input type="password" id="merging_password" name="merging_password" class="input-xlarge">
+                </div>
+            </div>
+        </form>
+    </script>
+</%text>
+<!-- /popup to prompt a/c merging  -->
+

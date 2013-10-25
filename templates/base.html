@@ -1,0 +1,94 @@
+<%!
+import json
+%>
+<!DOCTYPE html>
+<html lang="en" xmlns:fb="http://ogp.me/ns/fb#">
+  <head>
+    <meta charset="utf-8">
+    <title>Social Login Example</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico" />
+
+    <!-- Le styles -->
+    <link href="/static/libs/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    </style>
+    <link href="/static/libs/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+
+    <!-- ShopSocially Integration -->
+    <script type='text/javascript'>
+        SSConfig = {
+            server: 'http://localhost:8000',
+            partner_id: '38d65ae37e99aed2de2db570eb871308' /*REQUIRED: Also known as Account ID */
+        };
+        _ssq = (typeof _ssq === 'undefined')?[]:_ssq;
+        _ssq.push(['init', SSConfig]);
+        (function() {
+            var ss = document.createElement('script');ss.src = '//localhost:8000/js/all.js';
+            ss.type = 'text/javascript';ss.async = 'true';
+            var s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(ss, s);
+        })();
+    </script>
+    <!-- /ShopSocially Integration -->
+
+  </head>
+
+  <body>
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+            <a class="brand" href="/">Social Login Example</a>
+            <div class="nav-collapse">
+                <ul class="nav">
+                    % if cc_user:
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            % if  cc_user['fb_uid']:
+                                <img src="https://graph.facebook.com/${cc_user['fb_uid']}/picture" style="width:25px"/>
+                            %endif
+                            ${cc_user['first_name']}
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a id="logout" href="javascript:void(0)">Log out</a></li>
+                        </ul>
+                    </li>
+                    % endif
+                </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+	${next.body()}
+
+    </div> <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/static/libs/jquery.js"></script>
+    <script src="/static/libs/jquery.tmpl.js"></script>
+    <script src="/static/libs/jquery.cookie.js"></script>
+    <script src="/static/libs/bootstrap/js/bootstrap.js"></script>
+
+    <script language="javascript">
+	var cc_user = ${json.dumps(cc_user) |n};
+	var template_name = "${template_name}";
+    </script>
+
+    <!-- inherited template should define their own include_js to include JS they need -->
+    ${self.include_js()}
+  </body>
+</html>
+
+<%def name="include_js()">
+    <script src="/static/app/main.js"></script>
+</%def>
+
